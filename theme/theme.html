@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{Title}{block:TagPage} — {lang:Posts tagged Tag}{/block:TagPage}{block:SearchPage} — {lang:Search results for SearchQuery}{/block:SearchPage}{block:PermalinkPage}{block:PostSummary} — {PostSummary}{/block:PostSummary}{/block:PermalinkPage}</title>
+	<meta name="description" content="{MetaDescription}">
+	<meta name="theme-color" content="#181818">
+	<link rel="alternate" type="application/rss+xml" href="{RSS}">
+	<link rel="shortcut icon" href="{Favicon}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400&display=swap" rel="stylesheet">
+
+	<meta name="image:Logo" content="">
+	<meta name="if:Show avatar" content="1">
+	<meta name="if:Show navigation" content="1">
+	<meta name="if:Enable theme switcher" content="1">
+	<meta name="if:Auto dark mode" content="1">
+	<meta name="select:Default theme" content="light" title="Light">
+	<meta name="select:Default theme" content="dark" title="Dark">
+
+	<meta name="color:Light background" content="#ffffff">
+	<meta name="color:Light text" content="#232323">
+	<meta name="color:Light link" content="#6b6b6b">
+	<meta name="color:Dark background" content="#181818">
+	<meta name="color:Dark text" content="#eaeaea">
+	<meta name="color:Dark link" content="#bdbdbd">
+	<meta name="color:Card border light" content="#e9e9e9">
+	<meta name="color:Card border dark" content="#2b2b2b">
+
+	<style>
+		:root {
+			--light-bg: {color:Light background};
+			--light-text: {color:Light text};
+			--light-link: {color:Light link};
+			--dark-bg: {color:Dark background};
+			--dark-text: {color:Dark text};
+			--dark-link: {color:Dark link};
+			--card-border-light: {color:Card border light};
+			--card-border-dark: {color:Card border dark};
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			min-height: 100%;
+			font-family: "Libre Baskerville", serif;
+		}
+
+		body {
+			padding: 2rem;
+			line-height: 1.55;
+			font-family: "Libre Baskerville", serif;
+		}
+
+		html.theme-light {
+			background: var(--light-bg);
+			color: var(--light-text);
+		}
+
+		html.theme-dark {
+			background: var(--dark-bg);
+			color: var(--dark-text);
+		}
+
+		.container {
+			max-width: 1220px;
+			margin: 0 auto;
+		}
+
+		.switchers {
+			position: fixed;
+			top: 1rem;
+			right: 1rem;
+			display: flex;
+			gap: 1rem;
+			z-index: 20;
+		}
+
+		.switch-link {
+			font-family: "Libre Baskerville", serif;
+			font-size: 0.85rem;
+			letter-spacing: 1px;
+			background: none;
+			border: 0;
+			padding: 0;
+			cursor: pointer;
+			text-decoration: none;
+			opacity: 0.8;
+		}
+
+		.theme-light .switch-link {
+			color: var(--light-link);
+		}
+
+		.theme-dark .switch-link {
+			color: var(--dark-link);
+		}
+
+		.switch-link:hover {
+			opacity: 1;
+			text-decoration: underline;
+		}
+
+		.intro {
+			margin-top: 2.25rem;
+			margin-bottom: 2.5rem;
+			text-align: center;
+		}
+
+		.intro-top {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		.avatar {
+			width: 54px;
+			height: 54px;
+			border-radius: 999px;
+			object-fit: cover;
+		}
+
+		.logo {
+			max-height: 44px;
+			width: auto;
+		}
+
+		.headline {
+			font-size: clamp(1.5rem, 3.7vw, 2.6rem);
+			line-height: 1.28;
+			margin: 0;
+			max-width: 34ch;
+			margin-left: auto;
+			margin-right: auto;
+			font-family: "Libre Baskerville", serif;
+			font-weight: 400;
+		}
+
+		.blog-description {
+			margin: 0.75rem auto 0;
+			max-width: 44ch;
+			font-size: 1.1rem;
+			line-height: 1.6;
+		}
+
+		.theme-light .blog-description {
+			color: var(--light-link);
+		}
+
+		.theme-dark .blog-description {
+			color: var(--dark-link);
+		}
+
+		.headline .greeting {
+			display: inline-block;
+			min-width: 5ch;
+		}
+
+		.links-list,
+		.top-nav,
+		.pagination,
+		.tags,
+		.post-meta {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.top-nav {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			gap: 0.75rem 1rem;
+			margin-top: 1rem;
+			overflow-x: auto;
+			white-space: nowrap;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+
+		/* Centra sin cortar los primeros enlaces cuando la lista desborda */
+		.top-nav li:first-child {
+			margin-left: auto;
+		}
+
+		.top-nav li:last-child {
+			margin-right: auto;
+		}
+
+		.top-nav::-webkit-scrollbar {
+			display: none;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		.theme-light a {
+			color: var(--light-link);
+		}
+
+		.theme-dark a {
+			color: var(--dark-link);
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		.posts {
+			margin-top: 2.6rem;
+			display: grid;
+			gap: 2rem;
+		}
+
+		.post-card {
+			padding: 0;
+		}
+
+		.post-card.is-photo,
+		.post-card.is-photoset,
+		.post-card.is-panorama {
+			padding: 0;
+			background: transparent;
+		}
+
+		.theme-light .post-card.is-photo,
+		.theme-light .post-card.is-photoset,
+		.theme-light .post-card.is-panorama,
+		.theme-dark .post-card.is-photo,
+		.theme-dark .post-card.is-photoset,
+		.theme-dark .post-card.is-panorama {
+			border-color: transparent;
+		}
+
+		.post-title {
+			margin: 0 0 0.75rem;
+			font-size: 1.4rem;
+			line-height: 1.35;
+			font-family: "Libre Baskerville", serif;
+		}
+
+		.top-nav a,
+		.tags a {
+			font-family: "Roboto", sans-serif;
+			font-weight: 400;
+		}
+
+		.post-card:not(.is-photo):not(.is-photoset):not(.is-panorama) {
+			max-width: 820px;
+			margin: 0 auto;
+		}
+
+		.post-card img,
+		.post-card video {
+			max-width: 100%;
+			height: auto;
+		}
+
+		.post-card iframe {
+			max-width: 100%;
+		}
+
+		.post-card.post-video iframe {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9;
+		}
+
+		.post-card.is-photo img,
+		.post-card.is-panorama img,
+		.post-card.is-photoset img {
+			display: block;
+			width: min(100%, 1220px);
+			margin: 0 auto;
+		}
+
+		.post-card.is-photoset .tumblr_photoset,
+		.post-card.is-photoset .photoset-grid {
+			max-width: 1220px;
+			margin: 0 auto;
+		}
+
+		.post-card.is-photo .post-content,
+		.post-card.is-panorama .post-content,
+		.post-card.is-photoset .post-content {
+			text-align: center;
+		}
+
+		.post-card.is-photo .post-meta,
+		.post-card.is-panorama .post-meta,
+		.post-card.is-photoset .post-meta,
+		.post-card.is-photo .tags,
+		.post-card.is-panorama .tags,
+		.post-card.is-photoset .tags {
+			justify-content: center;
+		}
+
+		.post-content {
+			overflow-wrap: anywhere;
+			font-size: 1.15rem;
+		}
+
+		.quote {
+			font-size: 1.3rem;
+			margin: 0;
+		}
+
+		.quote-source {
+			margin-top: 0.75rem;
+			font-size: 0.95rem;
+			opacity: 0.8;
+		}
+
+		.chat {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.chat li {
+			padding: 0.35rem 0;
+			border-bottom: 1px dashed;
+		}
+
+		.theme-light .chat li {
+			border-color: var(--card-border-light);
+		}
+
+		.theme-dark .chat li {
+			border-color: var(--card-border-dark);
+		}
+
+		.post-meta {
+			margin-top: 1rem;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35rem 0.75rem;
+			font-size: 0.88rem;
+			font-family: "Roboto", sans-serif;
+		}
+
+		.tags {
+			margin-top: 0.75rem;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.35rem 0.6rem;
+			font-size: 0.82rem;
+		}
+
+		.pagination {
+			margin-top: 2rem;
+			display: flex;
+			gap: 1rem;
+			align-items: center;
+			font-size: 0.95rem;
+		}
+
+		.site-footer {
+			margin-top: 2.5rem;
+			padding-bottom: 2rem;
+			font-size: 0.82rem;
+		}
+
+		blockquote {
+			margin-left: 0;
+			padding-left: 1rem;
+			border-left: 2px solid;
+		}
+
+		.theme-light blockquote {
+			border-color: var(--card-border-light);
+		}
+
+		.theme-dark blockquote {
+			border-color: var(--card-border-dark);
+		}
+
+		@media (max-width: 720px) {
+			body {
+				padding: 1rem;
+			}
+
+			.switchers {
+				top: 0.7rem;
+				right: 0.7rem;
+			}
+
+			.post-card {
+				padding: 0;
+			}
+
+			.post-card.is-photo,
+			.post-card.is-photoset,
+			.post-card.is-panorama {
+				padding: 0;
+			}
+		}
+
+		{CustomCSS}
+	</style>
+
+	<script>
+		// Aplica el tema antes del primer pintado para evitar el destello de color
+		(function () {
+			var mode;
+			try {
+				mode = localStorage.getItem("tumblr-theme-mode");
+			} catch (error) {}
+
+			if (mode !== "dark" && mode !== "light") {
+				if ("{block:IfAutoDarkMode}1{/block:IfAutoDarkMode}" === "1") {
+					mode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+				} else {
+					mode = "{select:Default theme}" === "dark" ? "dark" : "light";
+				}
+			}
+
+			document.documentElement.classList.add("theme-" + mode);
+		})();
+	</script>
+</head>
+<body>
+	<div class="switchers">
+		{block:IfEnableThemeSwitcher}
+			<button id="theme-switch" class="switch-link" type="button" aria-label="Modo oscuro" aria-pressed="false">🌙</button>
+		{/block:IfEnableThemeSwitcher}
+	</div>
+
+	<main class="container">
+		<header class="intro">
+			<div class="intro-top">
+				{block:IfShowAvatar}
+					<img src="{PortraitURL-128}" alt="{Title}" class="avatar">
+				{/block:IfShowAvatar}
+				{block:IfLogoImage}
+					<img src="{image:Logo}" alt="{Title}" class="logo custom-logo">
+				{/block:IfLogoImage}
+			</div>
+
+			<h1 class="headline">
+				<a href="/">{Title}</a>
+			</h1>
+			{block:Description}
+				<p class="blog-description">{Description}</p>
+			{/block:Description}
+
+			{block:IfShowNavigation}
+				<ul class="top-nav">
+					<li><a href="/" class="{block:HomePage}is-active{/block:HomePage}">{lang:Posts}</a></li>
+					{block:AskEnabled}<li><a href="/ask" class="{block:AskPage}is-active{/block:AskPage}">{AskLabel}</a></li>{/block:AskEnabled}
+					{block:SubmissionsEnabled}<li><a href="/submit" class="{block:SubmitPage}is-active{/block:SubmitPage}">{SubmitLabel}</a></li>{/block:SubmissionsEnabled}
+					{block:HasPages}{block:Pages}<li><a href="{URL}" class="{CurrentState} {ExternalState}">{Label}</a></li>{/block:Pages}{/block:HasPages}
+					<li><a href="/archive">{lang:Archive}</a></li>
+					{block:Likes}<li><a href="/likes" class="{block:LikesPage}is-active{/block:LikesPage}">{lang:Likes}</a></li>{/block:Likes}
+				</ul>
+			{/block:IfShowNavigation}
+		</header>
+
+		{block:SearchPage}
+			{block:NoSearchResults}
+				<article class="post-card"><p>{lang:Sorry no search results found}.</p></article>
+			{/block:NoSearchResults}
+		{/block:SearchPage}
+
+		{block:TagPage}
+			<article class="post-card"><p>{lang:Posts tagged Tag}: <strong>#{Tag}</strong></p></article>
+		{/block:TagPage}
+
+		<section class="posts">
+			{block:Posts inlineMediaWidth="1280" inlineNestedMediaWidth="1280"}
+				<article class="post-card post-{PostType}{block:Photo} is-photo{/block:Photo}{block:Photoset} is-photoset{/block:Photoset}{block:Panorama} is-panorama{/block:Panorama}">
+					{block:Text}
+						{block:Title}<h2 class="post-title"><a href="{Permalink}">{Title}</a></h2>{/block:Title}
+						<div class="post-content">{Body}</div>
+					{/block:Text}
+
+					{block:Photo}
+						<div class="post-content">
+							{LinkOpenTag}<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}" width="{PhotoWidth-HighRes}" height="{PhotoHeight-HighRes}" loading="lazy" decoding="async">{LinkCloseTag}
+							{block:Caption}<div>{Caption}</div>{/block:Caption}
+						</div>
+					{/block:Photo}
+
+					{block:Photoset}
+						<div class="post-content">
+							{Photoset-700}
+							{block:Caption}<div>{Caption}</div>{/block:Caption}
+						</div>
+					{/block:Photoset}
+
+					{block:Panorama}
+						<div class="post-content">
+							{LinkOpenTag}<img src="{PhotoURL-Panorama}" alt="{PhotoAlt}" width="{PhotoWidth-Panorama}" height="{PhotoHeight-Panorama}" loading="lazy" decoding="async">{LinkCloseTag}
+							{block:Caption}<div>{Caption}</div>{/block:Caption}
+						</div>
+					{/block:Panorama}
+
+					{block:Quote}
+						<blockquote class="quote">{Quote}</blockquote>
+						{block:Source}<div class="quote-source">— {Source}</div>{/block:Source}
+					{/block:Quote}
+
+					{block:Link}
+						<h2 class="post-title"><a href="{URL}" {Target}>{Name} ↗</a></h2>
+						{block:Description}<div class="post-content">{Description}</div>{/block:Description}
+					{/block:Link}
+
+					{block:Chat}
+						{block:Title}<h2 class="post-title"><a href="{Permalink}">{Title}</a></h2>{/block:Title}
+						<ul class="chat">
+							{block:Lines}
+								<li>{block:Label}<strong>{Label}</strong> {/block:Label}{Line}</li>
+							{/block:Lines}
+						</ul>
+					{/block:Chat}
+
+					{block:Audio}
+						<div class="post-content">
+							{AudioEmbed}
+							{block:Caption}<div>{Caption}</div>{/block:Caption}
+						</div>
+					{/block:Audio}
+
+					{block:Video}
+						<div class="post-content">
+							{Video-700}
+							{block:Caption}<div>{Caption}</div>{/block:Caption}
+						</div>
+					{/block:Video}
+
+					{block:Answer}
+						<h2 class="post-title">{Asker} asked</h2>
+						<div class="post-content">{Question}</div>
+						<div class="post-content">{Answer}</div>
+					{/block:Answer}
+
+					<ul class="post-meta">
+						{block:Date}<li><a href="{Permalink}">{DayOfMonthWithZero}/{MonthNumberWithZero}/{Year}</a></li>{/block:Date}
+						{block:NoteCount}<li><a href="{Permalink}">{NoteCountWithLabel}</a></li>{/block:NoteCount}
+						{block:ContentSource}<li><a href="{SourceURL}" target="_blank" rel="noopener noreferrer">{lang:Source}: {SourceTitle}</a></li>{/block:ContentSource}
+					</ul>
+
+					{block:HasTags}
+						<ul class="tags">
+							{block:Tags}<li><a href="{TagURL}">#{Tag}</a></li>{/block:Tags}
+						</ul>
+					{/block:HasTags}
+
+					{block:PermalinkPage}
+						{block:PostNotes}
+							<div class="post-content">{PostNotes}</div>
+						{/block:PostNotes}
+					{/block:PermalinkPage}
+				</article>
+			{/block:Posts}
+		</section>
+
+		{block:Pagination}
+			<ul class="pagination">
+				{block:PreviousPage}<li><a href="{PreviousPage}">← {lang:Previous}</a></li>{/block:PreviousPage}
+				<li>{lang:Page CurrentPage of TotalPages}</li>
+				{block:NextPage}<li><a href="{NextPage}">{lang:Next} →</a></li>{/block:NextPage}
+			</ul>
+		{/block:Pagination}
+
+		<footer class="site-footer">
+			<a href="{RSS}">RSS</a> · <a href="https://www.tumblr.com">Tumblr</a>
+		</footer>
+	</main>
+
+	<script>
+		(function () {
+			var root = document.documentElement;
+			var themeKey = "tumblr-theme-mode";
+			var themeSwitcher = document.getElementById("theme-switch");
+			var themeColor = document.querySelector('meta[name="theme-color"]');
+			var mode = root.classList.contains("theme-dark") ? "dark" : "light";
+
+			function applyTheme() {
+				root.classList.remove("theme-light", "theme-dark");
+				root.classList.add(mode === "dark" ? "theme-dark" : "theme-light");
+				if (themeColor) {
+					themeColor.setAttribute("content", mode === "dark" ? "{color:Dark background}" : "{color:Light background}");
+				}
+				if (themeSwitcher) {
+					themeSwitcher.textContent = mode === "dark" ? "☀️" : "🌙";
+					themeSwitcher.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");				}
+			}
+
+			if (themeSwitcher) {
+				themeSwitcher.addEventListener("click", function () {
+					mode = mode === "dark" ? "light" : "dark";
+					try {
+						localStorage.setItem(themeKey, mode);
+					} catch (error) {}
+					applyTheme();
+				});
+			}
+
+			applyTheme();
+		})();
+	</script>
+</body>
+</html>

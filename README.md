@@ -2,6 +2,8 @@
 
 A personal Tumblr theme: minimal, type-focused, with light and dark modes.
 
+Live at **[rafaeltovar.tumblr.com](https://rafaeltovar.tumblr.com)**.
+
 The whole theme lives in a single file: [`theme/theme.html`](theme/theme.html).
 
 ## Features
@@ -10,7 +12,7 @@ The whole theme lives in a single file: [`theme/theme.html`](theme/theme.html).
 - Light and dark modes with a toggle button. The visitor's choice is remembered in their browser.
 - Optional automatic dark mode that follows the operating system preference.
 - The theme is applied before the page is painted, so there is no flash of the wrong colors on load.
-- Photos, photosets and panoramas span up to 1220px; all other posts read in an 820px column.
+- Every post reads in a single 820px column. Photosets are laid out natively in rows that follow Tumblr's photoset layout, instead of the fixed-width Tumblr iframe.
 - Support for every Tumblr post type: text, photo, photoset, panorama, quote, link, chat, audio, video and answers.
 - Navigation with home, ask, submit, custom pages, archive and likes. On mobile it scrolls horizontally.
 - Responsive layout.

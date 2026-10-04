@@ -77,7 +77,7 @@
 		.switchers {
 			position: fixed;
 			top: 1rem;
-			right: 1rem;
+			left: 1rem;
 			display: flex;
 			gap: 1rem;
 			z-index: 20;
@@ -223,41 +223,21 @@
 		}
 
 		.post-card {
-			padding: 0;
-		}
-
-		.post-card.is-photo,
-		.post-card.is-photoset,
-		.post-card.is-panorama {
-			padding: 0;
-			background: transparent;
-		}
-
-		.theme-light .post-card.is-photo,
-		.theme-light .post-card.is-photoset,
-		.theme-light .post-card.is-panorama,
-		.theme-dark .post-card.is-photo,
-		.theme-dark .post-card.is-photoset,
-		.theme-dark .post-card.is-panorama {
-			border-color: transparent;
+			max-width: 820px;
+			width: 100%;
+			margin: 0 auto;
 		}
 
 		.post-title {
 			margin: 0 0 0.75rem;
 			font-size: 1.4rem;
 			line-height: 1.35;
-			font-family: "Libre Baskerville", serif;
 		}
 
 		.top-nav a,
 		.tags a {
 			font-family: "Roboto", sans-serif;
 			font-weight: 400;
-		}
-
-		.post-card:not(.is-photo):not(.is-photoset):not(.is-panorama) {
-			max-width: 820px;
-			margin: 0 auto;
 		}
 
 		.post-card img,
@@ -277,32 +257,32 @@
 		}
 
 		.post-card.is-photo img,
-		.post-card.is-panorama img,
-		.post-card.is-photoset img {
+		.post-card.is-panorama img {
 			display: block;
-			width: min(100%, 1220px);
-			margin: 0 auto;
+			width: 100%;
 		}
 
-		.post-card.is-photoset .tumblr_photoset,
-		.post-card.is-photoset .photoset-grid {
-			max-width: 1220px;
-			margin: 0 auto;
+		/* Photosets: filas según {PhotosetLayout}, montadas por el script del final */
+		.photoset {
+			display: grid;
+			gap: 4px;
 		}
 
-		.post-card.is-photo .post-content,
-		.post-card.is-panorama .post-content,
-		.post-card.is-photoset .post-content {
-			text-align: center;
+		.photoset-row {
+			display: flex;
+			gap: 4px;
 		}
 
-		.post-card.is-photo .post-meta,
-		.post-card.is-panorama .post-meta,
-		.post-card.is-photoset .post-meta,
-		.post-card.is-photo .tags,
-		.post-card.is-panorama .tags,
-		.post-card.is-photoset .tags {
-			justify-content: center;
+		.photoset-item {
+			flex: 1 1 0;
+			min-width: 0;
+			margin: 0;
+		}
+
+		.photoset-item img {
+			display: block;
+			width: 100%;
+			height: auto;
 		}
 
 		.post-content {
@@ -357,15 +337,49 @@
 			font-size: 0.82rem;
 		}
 
+		.post-notes .notes {
+			list-style: none;
+			margin: 1.5rem 0 0;
+			padding: 0;
+			font-family: "Roboto", sans-serif;
+			font-size: 0.88rem;
+		}
+
+		.post-notes .note {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.3rem 0;
+		}
+
+		.post-notes .note .avatar {
+			display: block;
+			width: 20px;
+			height: 20px;
+			border-radius: 999px;
+		}
+
+		.post-notes .note blockquote {
+			flex-basis: 100%;
+			margin: 0.25rem 0 0 1.75rem;
+		}
+
+		.post-notes .clear {
+			display: none;
+		}
+
 		.pagination {
 			margin-top: 2rem;
 			display: flex;
 			gap: 1rem;
 			align-items: center;
+			justify-content: center;
 			font-size: 0.95rem;
 		}
 
 		.site-footer {
+			text-align: center;
 			margin-top: 2.5rem;
 			padding-bottom: 2rem;
 			font-size: 0.82rem;
@@ -392,17 +406,7 @@
 
 			.switchers {
 				top: 0.7rem;
-				right: 0.7rem;
-			}
-
-			.post-card {
-				padding: 0;
-			}
-
-			.post-card.is-photo,
-			.post-card.is-photoset,
-			.post-card.is-panorama {
-				padding: 0;
+				left: 0.7rem;
 			}
 		}
 
@@ -493,7 +497,9 @@
 
 					{block:Photoset}
 						<div class="post-content">
-							{Photoset-700}
+							<div class="photoset" data-layout="{PhotosetLayout}">
+								{block:Photos}<figure class="photoset-item"><img src="{PhotoURL-HighRes}" alt="{PhotoAlt}" width="{PhotoWidth-HighRes}" height="{PhotoHeight-HighRes}" loading="lazy" decoding="async"></figure>{/block:Photos}
+							</div>
 							{block:Caption}<div>{Caption}</div>{/block:Caption}
 						</div>
 					{/block:Photoset}
@@ -558,7 +564,7 @@
 
 					{block:PermalinkPage}
 						{block:PostNotes}
-							<div class="post-content">{PostNotes}</div>
+							<div class="post-notes">{PostNotes}</div>
 						{/block:PostNotes}
 					{/block:PermalinkPage}
 				</article>
@@ -594,7 +600,8 @@
 				}
 				if (themeSwitcher) {
 					themeSwitcher.textContent = mode === "dark" ? "☀️" : "🌙";
-					themeSwitcher.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");				}
+					themeSwitcher.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");
+				}
 			}
 
 			if (themeSwitcher) {
@@ -608,6 +615,31 @@
 			}
 
 			applyTheme();
+
+			// Agrupa las fotos de cada photoset en filas según {PhotosetLayout} (p. ej. "123").
+			// Cada foto crece en proporción a su relación de aspecto para que la fila tenga una altura uniforme.
+			var photosets = document.querySelectorAll(".photoset[data-layout]");
+			for (var setIndex = 0; setIndex < photosets.length; setIndex++) {
+				var photoset = photosets[setIndex];
+				var items = Array.prototype.slice.call(photoset.querySelectorAll(".photoset-item"));
+				var rowSizes = photoset.getAttribute("data-layout").split("");
+
+				while (items.length) {
+					var rowSize = parseInt(rowSizes.shift(), 10) || 1;
+					var row = document.createElement("div");
+					row.className = "photoset-row";
+					items.splice(0, rowSize).forEach(function (item) {
+						var img = item.querySelector("img");
+						var ratio = img.getAttribute("width") / img.getAttribute("height");
+						// Escalado ×100: si la suma de flex-grow de la fila es < 1, la fila no llena el ancho
+						if (ratio > 0) {
+							item.style.flexGrow = ratio * 100;
+						}
+						row.appendChild(item);
+					});
+					photoset.appendChild(row);
+				}
+			}
 		})();
 	</script>
 </body>
